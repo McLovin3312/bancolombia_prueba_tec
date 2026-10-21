@@ -29,5 +29,20 @@ Las 3 variables que más dictan el avalúo según el modelo son:
 3. `estrato_6` (6.3%)
 *Nota: Se garantizó la exclusión de variables sin peso matemático (como identificadores de fila `id`) antes de la predicción final.*
 
-## 4. Entregable
-Las predicciones finales para los 5.385 registros del set de pruebas han sido generadas y exportadas exitosamente en `data/predicciones_avaluos_kevin.xlsx`.
+## 4. Entregable y Evaluación
+Las predicciones finales para los 5.385 registros del set de pruebas han sido generadas cumpliendo estrictamente con el formato oficial requerido por la prueba.
+
+* **Métrica de Evaluación:** El modelo alcanzó un **MAPE (Error Porcentual Absoluto Medio) del 21.79%**, lo que demuestra un rendimiento sólido y un buen nivel de generalización para la estimación de precios en el sector inmobiliario sin incurrir en sobreajuste.
+* **Archivo final:** Los resultados han sido exportados exitosamente en formato de texto separado por comas (`data/base_evaluada.csv`), conteniendo únicamente los campos solicitados de `id` y `valor_total_avaluo`.
+
+
+## 5. Recomendaciones de Negocio y Trabajo Futuro 
+**Utilidad del Modelo:**
+Este modelo es altamente útil para el área de **Riesgos y Originación de Crédito** de Bancolombia. Permite automatizar el "Retanqueo" y la "Normalización de cartera", dándole al banco una tasación preliminar en milisegundos sin depender inmediatamente de un perito humano, ahorrando costos operativos y acelerando la respuesta al cliente.
+
+**Datos adicionales sugeridos para mejorar el modelo:**
+Si el presupuesto y la factibilidad lo permiten, el modelo mejoraría drásticamente incluyendo:
+1. **Datos Macroeconómicos:** Tasa de interés del Banco de la República (impacta el poder adquisitivo) y tasa de inflación al momento del avalúo.
+2. **Datos Geoespaciales:** Distancia en metros a estaciones del Metro/Transmilenio, centros comerciales y vías principales (usando la API de Google Maps o los Puntosinteres.csv).
+3. **Antigüedad real del inmueble:** Factor crítico de depreciación estructural.
+
