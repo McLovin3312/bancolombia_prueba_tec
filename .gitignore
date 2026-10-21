@@ -1,0 +1,7 @@
+# Ignorar archivos de datos para no subir información del banco
+*.xlsx
+*.csv
+
+# Ignorar archivos temporales de Python
+__pycache__/
+.env
