@@ -1,0 +1,10 @@
+flowchart TB
+    DEV["Desarrollo<br/>código, prompts, tools,<br/>conocimiento"] --> CI["CI<br/>pruebas + evaluación<br/>+ seguridad"]
+    CI --> CD["CD progresivo<br/>canario + feature flags"]
+    CD --> PROD["Producción<br/>con guardrails"]
+    PROD --> OBS["Observabilidad<br/>trazas, métricas, costos"]
+    OBS --> EVAL["Evaluación en línea<br/>muestreo y retroalimentación"]
+    EVAL --> DS["Nuevos casos<br/>al conjunto de oro"]
+    DS --> DEV
+    OBS -->|"alertas, SLO"| OPS["Operación e<br/>respuesta a incidentes"]
+    OPS --> DEV

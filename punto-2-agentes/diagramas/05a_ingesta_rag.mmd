@@ -1,0 +1,13 @@
+flowchart TB
+    SRC["Fuentes<br/>SharePoint, Confluence,<br/>ITSM, wikis"] --> CON["Conectores<br/>y detección de cambios"]
+    CON --> PAR["Parseo<br/>PDF, DOCX, HTML, tablas, OCR"]
+    PAR --> CLN["Limpieza y deduplicación<br/>detección de PII"]
+    CLN --> CHK["Chunking estructural<br/>padre-hijo"]
+    CHK --> ENR["Enriquecimiento<br/>metadatos, resumen, preguntas hipotéticas"]
+    ENR --> EMB["Embeddings<br/>multilingües"]
+    EMB --> IDX[("Índice híbrido<br/>vector + BM25<br/>alias de versión")]
+    CON --> ACL["Sincronizar permisos<br/>ACL por documento"]
+    ACL --> IDX
+    IDX --> QA["Pruebas de calidad<br/>del índice"]
+    QA -->|"aprobado"| SWAP["Cambio de alias<br/>blue-green"]
+    QA -->|"falla"| ALERT["Alerta y no publicar"]

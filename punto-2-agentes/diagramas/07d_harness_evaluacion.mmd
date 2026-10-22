@@ -1,0 +1,23 @@
+flowchart TB
+    subgraph DATA["Conjuntos de datos versionados"]
+        G1["Conjunto de oro RAG<br/>preguntas, respuesta, documento fuente"]
+        G2["Trayectorias de tools<br/>tool, parámetros y orden esperados"]
+        G3["Conversaciones multi-turno<br/>con memoria"]
+        G4["Casos de seguridad<br/>inyección, fuga, permisos"]
+        G5["Casos de producción<br/>fallos y feedback negativo"]
+    end
+
+    DATA --> RUN["Ejecutor del harness<br/>agente real + mocks de sistemas"]
+    SIM["Simulador de usuario<br/>LLM con personas"] --> RUN
+    MOCK["Mocks de tools<br/>con códigos de error"] --> RUN
+
+    RUN --> TRC["Trazas de la ejecución"]
+    TRC --> M1["Métricas deterministas<br/>tool correcta, esquema, ACL"]
+    TRC --> M2["Juez LLM calibrado<br/>fidelidad, utilidad, tono"]
+    TRC --> M3["Revisión humana<br/>muestra periódica"]
+
+    M1 --> RPT["Reporte y puertas de calidad"]
+    M2 --> RPT
+    M3 --> RPT
+    RPT -->|"pasa umbrales"| OK["Se permite avanzar"]
+    RPT -->|"regresión"| NO["Se bloquea el cambio"]

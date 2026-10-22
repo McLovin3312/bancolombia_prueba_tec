@@ -1,0 +1,15 @@
+flowchart LR
+    EMP["Empleado"]
+    ACM["Agente Corporativo<br/>Multicanal (ACM)"]
+    IDP["Proveedor de identidad<br/>SSO / OIDC"]
+    LLMP["Proveedores LLM<br/>nube privada"]
+    KB["Fuentes de conocimiento<br/>políticas, manuales, KB, FAQs"]
+    SYS["Sistemas empresariales<br/>ITSM, calendario, CRM, BPM"]
+    OPS["Equipos de plataforma,<br/>riesgo y cumplimiento"]
+
+    EMP -->|"conversa"| ACM
+    ACM -->|"autentica"| IDP
+    ACM -->|"inferencia"| LLMP
+    ACM -->|"recupera"| KB
+    ACM -->|"ejecuta acciones"| SYS
+    OPS -->|"gobierna y monitorea"| ACM

@@ -1,0 +1,46 @@
+flowchart TB
+    U["Entrada del usuario"] --> G1
+
+    subgraph G1["Guardrails de ENTRADA"]
+        direction TB
+        A1["Autenticación y límites"]
+        A2["DLP y PII"]
+        A3["Inyección y jailbreak"]
+        A4["Alcance del tema"]
+    end
+
+    G1 --> AG["Agente"]
+    KNW["Contenido recuperado"] --> G2
+
+    subgraph G2["Guardrails de CONTEXTO"]
+        direction TB
+        B1["ACL por documento"]
+        B2["Clasificador de inyección<br/>en documentos"]
+        B3["Delimitadores de datos"]
+    end
+
+    G2 --> AG
+    AG --> G3
+
+    subgraph G3["Guardrails de HERRAMIENTAS"]
+        direction TB
+        C1["Lista cerrada de tools"]
+        C2["Validación de esquema"]
+        C3["Política OPA y nivel de riesgo"]
+        C4["Aprobación humana"]
+        C5["Límites y presupuesto"]
+    end
+
+    G3 --> TL["Sistemas"]
+    AG --> G4
+
+    subgraph G4["Guardrails de SALIDA"]
+        direction TB
+        D1["Fundamentación y citas"]
+        D2["PII y secretos"]
+        D3["Toxicidad y tono"]
+        D4["Formato y esquema"]
+        D5["Consejos fuera de política"]
+    end
+
+    G4 --> R["Respuesta al usuario"]

@@ -1,0 +1,22 @@
+flowchart TB
+    IN["Turno entrante"] --> INT["1. Identificar intención<br/>y especialista"]
+    INT --> SEL["2. Seleccionar capas necesarias<br/>no todas aplican siempre"]
+
+    SEL --> L1["Prompt de sistema<br/>y esquemas de tools del especialista"]
+    SEL --> L2["Perfil + memoria histórica<br/>si la consulta lo requiere"]
+    SEL --> L3["Resumen + turnos recientes"]
+    SEL --> L4["RAG si la intención es conocimiento"]
+    SEL --> L5["Resultados de tools del turno"]
+
+    L1 --> BUD["3. Aplicar presupuesto<br/>de tokens por capa"]
+    L2 --> BUD
+    L3 --> BUD
+    L4 --> BUD
+    L5 --> BUD
+
+    BUD --> OVR{"¿Excede el<br/>presupuesto total?"}
+    OVR -->|"no"| SAN["5. Sanear y delimitar<br/>contenido no confiable"]
+    OVR -->|"sí"| CMP["4. Comprimir por prioridad<br/>(ver sección 4)"]
+    CMP --> SAN
+    SAN --> ORD["6. Ordenar:<br/>estable primero, volátil al final"]
+    ORD --> LLM["Llamada al LLM"]

@@ -1,0 +1,23 @@
+flowchart TB
+    Q["Pregunta del usuario<br/>+ identidad y ACL"] --> UND["1. Comprensión de consulta<br/>reescritura con contexto de sesión,<br/>expansión de siglas, detección de filtros"]
+    UND --> CMPX{"¿Compleja o<br/>multi-parte?"}
+    CMPX -->|"sí"| DEC["Descomponer en subconsultas<br/>Agentic RAG"]
+    CMPX -->|"no"| RT["2. Enrutar a colecciones"]
+    DEC --> RT
+
+    RT --> FAQ{"¿Caché semántica<br/>o FAQ con alta similitud?"}
+    FAQ -->|"sí"| ANS_F["Respuesta de FAQ<br/>con cita"]
+    FAQ -->|"no"| HYB["3. Recuperación híbrida<br/>BM25 + vectorial<br/>filtros de metadatos y ACL"]
+
+    HYB --> FUS["4. Fusión RRF<br/>top 50"]
+    FUS --> RRK["5. Reranking<br/>cross-encoder, top 6 a 8"]
+    RRK --> GRD{"6. ¿Evidencia suficiente?<br/>puntuación mínima"}
+    GRD -->|"no, primera vez"| RFM["Reformular y reintentar<br/>máximo 1 vez"]
+    RFM --> HYB
+    GRD -->|"no, tras reintento"| NOK["Responder 'no encontré'<br/>y ofrecer ticket o escalar"]
+    GRD -->|"sí"| CMP["7. Compresión y ensamblado<br/>padre del fragmento, citas"]
+    CMP --> GEN["8. Generación<br/>solo con la evidencia"]
+    GEN --> VER["9. Verificación de fundamentación<br/>cada afirmación con cita"]
+    VER -->|"no fundamentada"| REG["Regenerar o responder con cautela"]
+    VER -->|"fundamentada"| OUT["Respuesta con citas<br/>documento, versión, enlace"]
+    ANS_F --> OUT

@@ -1,0 +1,23 @@
+flowchart LR
+    subgraph APP["Servicios del agente"]
+        ORQ["Orquestador"]
+        LGW["LLM Gateway"]
+        RAGS["RAG"]
+        MCP["Gateway MCP"]
+        GRD["Guardrails"]
+    end
+
+    ORQ & LGW & RAGS & MCP & GRD -->|"OpenTelemetry<br/>trazas, métricas, logs"| COL["OTel Collector<br/>enmascara PII"]
+
+    COL --> TR["Trazas de LLM<br/>Langfuse autoalojado"]
+    COL --> MT["Métricas<br/>Prometheus"]
+    COL --> LG["Logs<br/>Loki / ELK"]
+    COL --> AUD[("Auditoría inmutable<br/>WORM")]
+
+    MT --> GRF["Dashboards Grafana"]
+    TR --> GRF
+    LG --> GRF
+    GRF --> ALR["Alertas<br/>PagerDuty / Teams"]
+    TR --> JDG["Evaluadores en línea<br/>juez LLM sobre muestras"]
+    FB["Retroalimentación<br/>pulgar arriba/abajo"] --> TR
+    JDG --> DASH["Tablero de calidad"]

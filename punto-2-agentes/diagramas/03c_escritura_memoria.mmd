@@ -1,0 +1,14 @@
+flowchart TB
+    T["Fin de turno<br/>o de sesión"] --> EX["Extracción de candidatos<br/>modelo nivel S"]
+    EX --> F1{"¿Contiene PII de clientes<br/>o datos sensibles?"}
+    F1 -->|"sí"| DROP["Descartar"]
+    F1 -->|"no"| F2{"¿Origen confiable?<br/>dicho por el usuario"}
+    F2 -->|"no: viene de documento<br/>o resultado de tool"| DROP
+    F2 -->|"sí"| F3{"¿Duplicado o<br/>contradice una memoria?"}
+    F3 -->|"duplicado"| UPD["Actualizar fecha y confianza"]
+    F3 -->|"contradice"| RESOLV["Reemplazar y conservar historial"]
+    F3 -->|"nuevo"| CONS{"¿Es una preferencia<br/>inferida?"}
+    CONS -->|"sí"| ASK["Pedir confirmación<br/>al usuario"]
+    CONS -->|"no"| SAVE["Guardar con metadatos"]
+    ASK -->|"acepta"| SAVE
+    ASK -->|"rechaza"| DROP

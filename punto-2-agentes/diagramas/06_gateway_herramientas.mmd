@@ -1,0 +1,25 @@
+flowchart LR
+    AG["Agente<br/>especialista"] -->|"tool call + token OBO"| GW["Gateway MCP"]
+
+    subgraph GWL["Responsabilidades del gateway"]
+        direction TB
+        V["Validación de esquema"]
+        P["Política OPA<br/>rol, riesgo, horario"]
+        RL["Límites y cuotas"]
+        ID["Idempotencia"]
+        CB["Reintentos y<br/>circuit breaker"]
+        AU["Auditoría"]
+    end
+
+    GW --> V --> P --> RL --> ID --> CB --> AU
+    AU --> S1["MCP: Tickets"]
+    AU --> S2["MCP: Calendario"]
+    AU --> S3["MCP: Clientes"]
+    AU --> S4["MCP: Procesos"]
+    AU --> S5["MCP: Conocimiento"]
+
+    S1 --> ITSM["ITSM"]
+    S2 --> CAL["Calendario"]
+    S3 --> CRM["CRM / core"]
+    S4 --> BPM["BPM / RPA"]
+    S5 --> RAG["Servicio RAG"]

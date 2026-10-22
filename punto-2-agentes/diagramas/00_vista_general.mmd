@@ -1,0 +1,16 @@
+flowchart LR
+    EMP["Empleado"] --> CAN["Canales<br/>Teams, web, móvil, API"]
+    CAN --> EDGE["Gateway + SSO<br/>identidad delegada"]
+    EDGE --> AG["Agente híbrido<br/>supervisor, especialistas,<br/>planificador, aprobación humana"]
+
+    AG <--> MEM["Memoria<br/>corto y largo plazo"]
+    AG <--> CTX["Contexto<br/>presupuesto y compresión"]
+    AG --> LLM["LLM Gateway<br/>modelos por niveles"]
+    AG --> RAG["RAG avanzado<br/>híbrido + ACL + rerank"]
+    AG --> TOOLS["Gateway MCP<br/>tools y skills"]
+
+    RAG --> KB[("Conocimiento<br/>políticas, manuales,<br/>KB, incidentes, FAQs")]
+    TOOLS --> SYS["Sistemas<br/>ITSM, calendario,<br/>clientes, procesos"]
+
+    GRD["Guardrails y políticas"] -.-> AG
+    OBS["Observabilidad, evaluación<br/>y CI/CD"] -.-> AG

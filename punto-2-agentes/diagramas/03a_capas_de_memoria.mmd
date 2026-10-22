@@ -1,0 +1,26 @@
+flowchart LR
+    subgraph CP["Corto plazo (la sesión)"]
+        direction TB
+        CONV["Conversación actual<br/>últimos N turnos"]
+        RES["Resumen de sesión<br/>progresivo"]
+        SCR["Bloc de trabajo<br/>resultados de tools, plan"]
+    end
+
+    subgraph LP["Largo plazo (entre sesiones)"]
+        direction TB
+        PREF["Preferencias y perfil<br/>clave-valor"]
+        EPI["Contexto histórico<br/>resúmenes de sesiones y casos"]
+    end
+
+    REDIS[("Redis<br/>TTL 24 h")]
+    PGR[("PostgreSQL<br/>tabla relacional")]
+    PGV[("PostgreSQL + pgvector<br/>memoria episódica")]
+    OBJ[("Almacén de objetos<br/>artefactos grandes")]
+
+    CONV --> REDIS
+    RES --> REDIS
+    SCR --> REDIS
+    SCR -.->|"payload grande"| OBJ
+    PREF --> PGR
+    EPI --> PGV
+    RES -->|"al cerrar la sesión"| EPI

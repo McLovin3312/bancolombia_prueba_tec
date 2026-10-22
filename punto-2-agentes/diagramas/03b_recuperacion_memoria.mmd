@@ -1,0 +1,8 @@
+flowchart LR
+    Q["Consulta del usuario"] --> SUP{"¿Depende del<br/>historial?"}
+    SUP -->|"no"| SKIP["No consultar memoria<br/>histórica"]
+    SUP -->|"sí"| VS["Búsqueda vectorial<br/>filtrada por usuario, top 20"]
+    VS --> SC["Puntuar:<br/>similitud, recencia, importancia"]
+    SC --> TOP["Top 3 memorias"]
+    TOP --> CTX["Ensamblador de contexto"]
+    PREFS["Preferencias<br/>consulta exacta"] --> CTX

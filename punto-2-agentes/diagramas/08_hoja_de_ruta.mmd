@@ -1,0 +1,25 @@
+gantt
+    title Hoja de ruta propuesta (inicio supuesto 2 de noviembre de 2026)
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+
+    section Fase 0 Descubrimiento
+    Casos de uso, datos y riesgos            :f0a, 2026-11-02, 2w
+    Conjunto de oro inicial y línea base     :f0b, after f0a, 1w
+
+    section Fase 1 MVP conocimiento y servicio
+    Plataforma, CI/CD y observabilidad base  :f1a, after f0b, 3w
+    Ingesta y RAG avanzado                   :f1b, after f0b, 6w
+    Agente supervisor y mesa de servicio     :f1c, after f1a, 6w
+    Guardrails y evaluación                  :f1d, after f1a, 9w
+    Piloto con un área                       :milestone, f1m, after f1d, 0d
+
+    section Fase 2 Clientes y memoria
+    Memoria larga y preferencias             :f2a, after f1d, 3w
+    Herramienta de clientes con auditoría    :f2b, after f1d, 5w
+    Ampliación a más áreas                   :f2c, after f2b, 3w
+
+    section Fase 3 Procesos
+    Planificador y ejecutor con aprobación   :f3a, after f2c, 8w
+    GraphRAG de incidentes                   :f3b, after f2c, 5w
+    Despliegue general                       :milestone, f3m, after f3a, 0d

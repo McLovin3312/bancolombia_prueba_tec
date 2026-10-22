@@ -1,0 +1,18 @@
+flowchart TB
+    PR["Pull request"] --> S1["Calidad estática<br/>lint, tipos"]
+    S1 --> S2["Pruebas unitarias<br/>y de contrato de tools"]
+    S2 --> S3["Seguridad<br/>SAST, dependencias, secretos,<br/>escaneo de imagen, SBOM"]
+    S3 --> S4["Evaluación del agente<br/>subconjunto rápido del harness"]
+    S4 --> GATE1{"¿Puertas<br/>de calidad?"}
+    GATE1 -->|"no"| FAIL["Falla el PR<br/>con reporte"]
+    GATE1 -->|"sí"| MRG["Merge a main"]
+    MRG --> BLD["Build de contenedor<br/>firma y registro"]
+    BLD --> DEVD["Despliegue en dev"]
+    DEVD --> SMK["Pruebas de humo"]
+    SMK --> STG["Despliegue en staging<br/>evaluación completa<br/>+ red team + carga"]
+    STG --> GATE2{"¿Aprobación<br/>de riesgo y producto?"}
+    GATE2 -->|"no"| FAIL
+    GATE2 -->|"sí"| CAN["Canario en producción<br/>5 %, luego 25 %, luego 100 %"]
+    CAN --> MON{"¿SLO y calidad<br/>en línea estables?"}
+    MON -->|"sí"| FULL["Despliegue completo"]
+    MON -->|"no"| RB["Rollback automático"]

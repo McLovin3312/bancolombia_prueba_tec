@@ -1,0 +1,43 @@
+sequenceDiagram
+    autonumber
+    actor U as Empleado
+    participant C as Canal
+    participant G as Gateway y SSO
+    participant O as Orquestador
+    participant GR as Guardrails
+    participant M as Memoria
+    participant R as RAG
+    participant L as LLM Gateway
+    participant T as Tools MCP
+    participant S as Sistema empresarial
+
+    U->>C: Escribe una solicitud
+    C->>G: Mensaje + token del usuario
+    G->>O: Mensaje normalizado + identidad delegada
+    O->>GR: Validar entrada (PII, inyección, alcance)
+    GR-->>O: Entrada aprobada
+    O->>M: Cargar sesión y preferencias
+    M-->>O: Resumen, últimos turnos, perfil
+    O->>L: Clasificar intención (modelo pequeño)
+    L-->>O: Intención y especialista
+    alt Consulta de conocimiento
+        O->>R: Recuperar con filtros ACL del usuario
+        R-->>O: Fragmentos con citas
+    else Acción sobre un sistema
+        O->>GR: Validar herramienta y parámetros
+        alt Acción sensible
+            O->>U: Solicitar confirmación
+            U-->>O: Aprueba
+        end
+        O->>T: Invocar herramienta con token OBO
+        T->>S: Llamada a la API
+        S-->>T: Resultado
+        T-->>O: Resultado estructurado
+    end
+    O->>L: Generar respuesta con contexto ensamblado
+    L-->>O: Respuesta (streaming)
+    O->>GR: Validar salida (fundamentación, PII)
+    GR-->>O: Salida aprobada
+    O->>M: Actualizar sesión y memoria
+    O-->>C: Respuesta con citas
+    C-->>U: Muestra la respuesta

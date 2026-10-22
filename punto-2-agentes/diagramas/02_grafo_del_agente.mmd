@@ -1,0 +1,38 @@
+flowchart TD
+    START(["Mensaje del empleado"]) --> GIN["Guardrails de entrada"]
+    GIN -->|"bloqueado"| REJ["Respuesta segura<br/>o escalamiento"]
+    GIN -->|"aprobado"| CTXL["Cargar memoria<br/>y ensamblar contexto"]
+    CTXL --> SUP{"Supervisor<br/>clasifica intención"}
+
+    SUP -->|"conocimiento"| KNA["Especialista de conocimiento<br/>Tool Calling + RAG"]
+    SUP -->|"mesa de servicio"| SDA["Especialista de servicio<br/>tickets, estados, agenda"]
+    SUP -->|"cliente"| CDA["Especialista de cliente<br/>lectura restringida"]
+    SUP -->|"proceso complejo"| PLN["Planificador<br/>genera plan"]
+    SUP -->|"fuera de alcance<br/>o ambiguo"| CLR["Pedir aclaración<br/>o escalar a humano"]
+
+    PLN --> VAL{"¿Plan con acciones<br/>de riesgo?"}
+    VAL -->|"sí"| APR["Aprobación humana"]
+    VAL -->|"no"| EXE["Ejecutor de pasos"]
+    APR -->|"aprobado"| EXE
+    APR -->|"rechazado"| CLR
+    EXE --> VER{"¿Paso exitoso?"}
+    VER -->|"error recuperable"| EXE
+    VER -->|"error no recuperable"| COMP["Compensar y escalar"]
+    VER -->|"siguiente paso"| EXE
+    VER -->|"plan terminado"| SYN
+
+    SDA --> RSK{"¿Acción de<br/>escritura sensible?"}
+    RSK -->|"sí"| APR2["Confirmación del usuario"]
+    RSK -->|"no"| SYN
+    APR2 -->|"confirma"| SYN
+    APR2 -->|"cancela"| CLR
+
+    KNA --> SYN["Síntesis de respuesta<br/>con citas"]
+    CDA --> SYN
+    COMP --> SYN
+    CLR --> SYN
+    SYN --> GOUT["Guardrails de salida"]
+    GOUT -->|"falla"| FIX["Regenerar una vez<br/>o respuesta segura"]
+    FIX --> GOUT
+    GOUT -->|"aprobado"| MEMW["Actualizar memoria"]
+    MEMW --> END(["Respuesta al empleado"])

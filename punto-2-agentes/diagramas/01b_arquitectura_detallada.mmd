@@ -1,0 +1,85 @@
+flowchart TB
+    subgraph CAN["1. Canales de interacción"]
+        direction LR
+        TEAMS["Microsoft Teams / Slack"]
+        WEB["Portal web del empleado"]
+        MOB["App móvil"]
+        API["API para otros servicios"]
+    end
+
+    subgraph EDGE["2. Borde y seguridad"]
+        direction LR
+        GW["API Gateway + WAF<br/>rate limit, mTLS"]
+        AUTH["Autenticación SSO<br/>OIDC + token OBO"]
+        CHA["Adaptadores de canal<br/>mensaje normalizado"]
+    end
+
+    subgraph CORE["3. Plataforma del agente"]
+        direction TB
+        ORQ["Orquestador del agente<br/>grafo con estado, supervisor<br/>y especialistas"]
+        CTX["Ensamblador de contexto<br/>presupuesto de tokens y compresión"]
+        GRD["Guardrails<br/>entrada, herramientas, salida"]
+        LGW["LLM Gateway<br/>enrutamiento, caché, fallback, cuotas"]
+        MEM["Servicio de memoria<br/>corto y largo plazo"]
+        POL["Motor de políticas<br/>permisos y riesgo por acción"]
+        HITL["Aprobación humana<br/>acciones sensibles"]
+    end
+
+    subgraph KNOW["4. Conocimiento (RAG)"]
+        direction TB
+        RAGS["Servicio RAG<br/>consulta, híbrida, rerank"]
+        VEC[("Índice híbrido<br/>vectorial + BM25")]
+        ING["Pipeline de ingesta<br/>parseo, chunking, embeddings"]
+    end
+
+    subgraph TOOLS["5. Herramientas"]
+        direction TB
+        MCP["Gateway de herramientas<br/>servidores MCP"]
+        T1["Tickets"]
+        T2["Calendario"]
+        T3["Clientes"]
+        T4["Procesos / BPM"]
+    end
+
+    subgraph ENT["6. Sistemas empresariales"]
+        direction LR
+        ITSM["ITSM"]
+        CAL["Correo y calendario"]
+        CRM["CRM / core"]
+        BPM["BPM / RPA"]
+        DOCS["SharePoint / Confluence / wikis"]
+    end
+
+    subgraph DATA["7. Datos y observabilidad"]
+        direction LR
+        REDIS[("Redis<br/>estado de sesión")]
+        PG[("PostgreSQL + pgvector<br/>memoria larga, auditoría")]
+        OBJ[("Almacén de objetos<br/>artefactos, documentos")]
+        OBS["Trazas, métricas, logs<br/>OpenTelemetry + Langfuse"]
+    end
+
+    CAN --> GW --> CHA --> ORQ
+    GW --- AUTH
+    ORQ <--> CTX
+    ORQ <--> GRD
+    ORQ <--> LGW
+    ORQ <--> MEM
+    ORQ --> POL
+    POL --> HITL
+    ORQ --> RAGS
+    ORQ --> MCP
+    RAGS --> VEC
+    ING --> VEC
+    DOCS --> ING
+    MCP --> T1 & T2 & T3 & T4
+    T1 --> ITSM
+    T2 --> CAL
+    T3 --> CRM
+    T4 --> BPM
+    MEM --> REDIS
+    MEM --> PG
+    ING --> OBJ
+    ORQ -.-> OBS
+    LGW -.-> OBS
+    MCP -.-> OBS
+    RAGS -.-> OBS
